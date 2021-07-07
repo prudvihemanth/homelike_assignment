@@ -1,12 +1,22 @@
 import { Server, Request, ResponseToolkit } from "@hapi/hapi";
-import Logger from "./src/utils/logger"
+import Logger from "./src/utils/logger";
+import plugins from "./src/plugins/plugins"
+import * as Inert from "@hapi/inert";
+import * as Vision from "@hapi/vision";
+import * as HapiSwagger from "hapi-swagger";
+
+
 
 const init = async () => {
+   
     const server: Server = new Server({
         port: 3000,
         host: 'localhost'
     });
-    server.route({
+
+    await server.register(plugins);
+
+    server.route([{
         method: 'GET',
         path: '/',
         handler: (request: Request, h: ResponseToolkit) => {
@@ -17,7 +27,8 @@ const init = async () => {
             Logger.debug("This is a debug log");
             return 'Hello World!';
         }
-    });
+    }]);
+
     await server.start();
     console.log('Server running on %s', server.info.uri);
 };
