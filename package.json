@@ -17,6 +17,7 @@
     "@hapi/hapi": "^20.1.5",
     "@hapi/inert": "^6.0.3",
     "@hapi/vision": "^6.1.0",
+    "bcrypt": "^5.0.1",
     "chai": "^4.3.4",
     "config": "^3.3.6",
     "dotenv": "^10.0.0",
@@ -32,6 +33,7 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/config": "0.0.38",
     "@types/hapi__hapi": "^20.0.8",
     "@types/hapi__inert": "^5.2.2",

@@ -5,3 +5,5 @@ Home Like Assignment:
 --Best Practices (logging, docker compose, testing, tsdocs, swagger)
 
 -- node version: v14.17.3 / npm version v14.17.3
+
+-- mongo latest   (retry mechanism, authentication, autherisation etc..)  (sudo service mongod start)

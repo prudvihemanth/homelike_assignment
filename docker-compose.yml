@@ -1,1 +1,20 @@
-// docker-compose file goes here
+version: '3.7'
+services:
+  nodejs-api-homelike:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on: 
+      - mongo
+    container_name: node-app-homelike
+    links:
+      - mongo
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    container_name: mongo
+    volumes:
+      - ./db/:/data/db
