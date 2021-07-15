@@ -1,25 +1,20 @@
 import { Schema, ObjectId } from "mongoose";
+import * as mongoose from "mongoose";
 
-export const userSchema = new Schema({
+const schema = new Schema({
 
     firstName: {type: String},
-    lastName: String,
-    email: String,
+    lastName: {type: String},
+    email: { type: String, required: true },
     password: { type: String, required: true },
-    isActive: Boolean,
+    isActive: {type: Boolean, default: true},
     created_date: { type: Date, default: Date.now },
   //  favouriteApartments: [{ type : ObjectId, ref: 'User' }], 
     
 });
 
-userSchema.index({ email: 1}, { unique: true })
+schema.index({ email: 1}, { unique: true })
 
-// firstname
-// lastname
-// email
-// password
-// created_date
-// favourate_apartments
-// isactive
+export const userSchema = mongoose.model('User', schema);
 
 //register (202), return all users (200), login (200), mark favourite (), list all favourite apartments ()

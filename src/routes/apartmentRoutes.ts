@@ -11,7 +11,7 @@ const apartmentRoutes = [
     {
         method: 'POST',
         path: `${basePath}createApartment`,
-        handler: controller.searchApartment,
+        handler: controller.createApartment,
         options: {
             description: 'Get todo',
             notes: 'Returns a todo item by the id passed in the path',
@@ -19,15 +19,15 @@ const apartmentRoutes = [
             validate: {
                 payload: Joi.object({
                     location: {
-                        city: Joi.string().min(3).max(10),
-                        country: Joi.string().min(3).max(10)
+                        city: Joi.string().min(3).max(30).required(),
+                        country: Joi.string().min(3).max(30).required()
                     },
                     details: {
                         title: Joi.string().min(5).max(30).required(),
                         description: Joi.string().min(10).max(200).required(),
                     },
                     layout: {
-                        noOfBedrooms: Joi.number().min(1).max(10).required(),
+                        noOfBedrooms: Joi.number().min(1).max(10),
                         isDining: Joi.boolean(),
                         isKitchen: Joi.boolean()
                     },
@@ -47,9 +47,8 @@ const apartmentRoutes = [
                         }
                     },
                     pricing: {
-                        rentInEur0: Joi.number().min(100).max(5000),
-                        depositMonths: Joi.number().min(0).max(12),
-
+                        rentInEuro: Joi.number().min(100).max(5000).required(),
+                        depositMonths: Joi.number().min(0).max(12).required(),
                     }
                 })
             }
@@ -57,7 +56,7 @@ const apartmentRoutes = [
     },
     {
         method: 'POST',
-        path: `${basePath}searchApartment/{name}`,
+        path: `${basePath}searchApartment`,
         handler: controller.searchApartment,
         options: {
             description: 'Get todo',
@@ -100,7 +99,6 @@ const apartmentRoutes = [
         path: `${basePath}listFavouriteApartments`,
         handler: controller.searchApartment,
         options: {
-            auth: false,
             description: 'Get todo',
             notes: 'Returns a todo item by the id passed in the path',
             tags: ['api'], // ADD THIS TAG

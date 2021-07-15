@@ -1,13 +1,41 @@
-// {
-//     location: {address:"d", lat: "", long: ""},
-//     details: {title: "sdf", description: ""},
-//     layout: {no_of_doubleBeds: "", no_of_singleBeds, isShower: true, isBathtubs: "",  }
-//     other_rooms: {isDining: true, isKitchen: false},
-//     apartment_structure: {floor_no: "4", area_in_sqmt: "0"},
-//     amenities: {general: {TouchEvent, washing}, additional: {heating, fireplace}, kitchen_general: {coffee_machine, cooking_plates}, kitchen_additional: { istoaster:, cooking_utensils}}
-//     photos: [pic1, pic2, pic3],
-//     pricing: {rent: "", deposit_>_1 month: ""},
+import { Schema, ObjectId } from "mongoose";
+import * as mongoose from "mongoose";
 
-//}
+const schema = new Schema({
+        location: {
+          city: { type: String, required: true },
+          country: { type: String, required: true }
+        },
+        details: {
+          title: { type: String, required: true, unique: true },
+          description: { type: String, required: true }
+        },
+        layout: {
+          noOfBedrooms: { type: Number, default: null },
+          isDining: { type: Boolean, default: null },
+          isKitchen: { type: Boolean, default: null }
+        },
+        apartmentStructure: {
+          floorNo: { type: Number, default: null },
+          areaSqMts: { type: Number, default: null }
+        },
+        amenities: {
+          general: {
+            isWashing: { type: Boolean, default: null },
+            isHeating: { type: Boolean, default: null }
+          },
+          additional: {
+            isCoffeeMachine: { type: Boolean, default: null },
+            isToaster: { type: Boolean, default: null }
+          }
+        },
+        pricing: {
+          rentInEuro: { type: Number, required: true },
+          depositMonths: { type: Number, required: true }
+        }
+      });
 
-// create apartment, search apartment   
+
+export const apartmentSchema = mongoose.model('Apartment', schema);
+
+//register (202), return all users (200), login (200), mark favourite (), list all favourite apartments () 

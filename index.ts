@@ -47,7 +47,8 @@ const init = async () => {
     });
 
     //register service Routes
-    server.route([...userRoutes, ...apartmentRoutes]);
+    server.route(userRoutes);
+    server.route(apartmentRoutes);
 
     //db connection with Authentication and Avl support
     const dbOptions = {
@@ -61,7 +62,7 @@ const init = async () => {
 
     let connect = async () => {
 
-        await mongoose.connect('mongodb://mongo:27017/homelike', dbOptions, (err) => { 
+        await mongoose.connect('mongodb://localhost:27017/homelike', dbOptions, (err) => { 
 
             if (err) {
                 Logger.error("mongodb connection error", err);

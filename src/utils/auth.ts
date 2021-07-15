@@ -46,4 +46,17 @@ async generateHash (password: string)  {
   }
   };
 
+  async compareHash (password: string, hash: string) {
+    try {
+    Logger.info(password, hash)  
+    const isPasswordCorrect  = await bcrypt.compare(password, hash)
+    return isPasswordCorrect;
+    }
+    catch (err) {
+      Logger.error(err)
+    return err;
+    }
+
+  }
+
 }
