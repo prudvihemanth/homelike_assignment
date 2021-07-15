@@ -1,20 +1,26 @@
-version: '3.7'
+version: "3"
 services:
-  nodejs-api-homelike:
+  api-server:
     build:
       context: ./
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    depends_on: 
-      - mongo
-    container_name: nodejs-api-homelike
-    links:
+    networks:
+      - homelike-network
+    depends_on:
       - mongo
   mongo:
     image: mongo
     ports:
       - "27017:27017"
-    container_name: mongo
+    networks:
+      - homelike-network
     volumes:
-      - ./db/:/data/db
+      - mongo-data:/data/db
+networks:
+  homelike-network:
+    driver: bridge
+volumes:
+  mongo-data:
+    driver: local
