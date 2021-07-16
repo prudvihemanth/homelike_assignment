@@ -13,6 +13,8 @@ const apartmentRoutes = [
         path: `${basePath}createApartment`,
         handler: controller.createApartment,
         options: {
+            auth: 'jwt',
+            plugins: {'hapiAuthorization': {roles: ['TENANT']}},
             description: 'Get todo',
             notes: 'Returns a todo item by the id passed in the path',
             tags: ['api'], // ADD THIS TAG
@@ -59,6 +61,8 @@ const apartmentRoutes = [
         path: `${basePath}searchApartment`,
         handler: controller.searchApartment,
         options: {
+            auth: 'jwt',
+            plugins: {'hapiAuthorization': {roles: ['TENANT', 'USER']}},
             description: 'Get todo',
             notes: 'Returns a todo item by the id passed in the path',
             tags: ['api'], // ADD THIS TAG
@@ -84,6 +88,8 @@ const apartmentRoutes = [
         path: `${basePath}markFavouriteApartment/{apartmentId}`,
         handler: controller.markFavouriteApartment,
         options: {
+            auth: false,
+         //   plugins: {'hapiAuthorization': {roles: ['TENANT', 'USER']}},
             description: 'Get todo',
             notes: 'Returns a todo item by the id passed in the path',
             tags: ['api'], // ADD THIS TAG
@@ -97,8 +103,9 @@ const apartmentRoutes = [
     {
         method: 'GET',
         path: `${basePath}listFavouriteApartments`,
-        handler: controller.searchApartment,
+        handler: controller.listFavouriteApartments,
         options: {
+            auth: false,
             description: 'Get todo',
             notes: 'Returns a todo item by the id passed in the path',
             tags: ['api'], // ADD THIS TAG

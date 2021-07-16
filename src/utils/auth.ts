@@ -2,6 +2,8 @@
 import * as JWT from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
 import Logger from "./logger";
+import { userSchema } from "../schemas/userSchema";
+
 
 export class authController {
 
@@ -20,17 +22,32 @@ export class authController {
    */
 
 
- createToken = () => {
-  return JWT.sign({ foo: 'bar' }, "afaf");
+async createToken (userObj: any) {
+  try {
+    const user = {
+      id: userObj._id,
+      email: userObj.email,
+      role: userObj.role
+    }
+
+
+  const token = await JWT.sign(user, 'shhhhh');
+  return token;
+  }
+  catch (e){
+    Logger.error(e)
+    return e
+  }
 }
 
-validate  () {
-  // do your checks to see if the person is valid
-  if (true) {
-    return { isValid: false };
+async validate  (decoded: any, request: any, h: any) {
+ const user = await userSchema.findOne({ _id: decoded.id });
+  if (user) {
+    request.context = user;
+    return { isValid: true };
   }
   else {
-    return { isValid: true };
+    return { isValid: false };
   }
 }; 
 

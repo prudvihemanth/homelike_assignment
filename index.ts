@@ -5,8 +5,12 @@ import Logger from "./src/utils/logger";
 import plugins from "./src/plugins/plugins"
 import userRoutes from "./src/routes/userRoutes";
 import apartmentRoutes from "./src/routes/apartmentRoutes";
-//import { validate } from "./src/utils/auth"
+import { authController } from "./src/utils/auth";
 import * as dotenv from "dotenv";
+
+const controller = new authController();
+
+const validate = controller.validate;
 
 const init = async () => {
 
@@ -20,19 +24,17 @@ const init = async () => {
     //register env
     dotenv.config();
 
-
-
     // register Hapi js plugins
     await server.register(plugins);
 
-    //define auth strategy
-    // server.auth.strategy('jwt', 'jwt',
-    //     {
-    //         key: process.env.AUTH_SECRET,
-    //         validate
-    //     });
+    // define auth strategy
+    server.auth.strategy('jwt', 'jwt',
+        {
+            key: "shhhhh",
+            validate,
+        });
 
-    // server.auth.default('jwt');
+    server.auth.default('jwt');
 
     //service heartbeat route
     server.route({
@@ -46,9 +48,15 @@ const init = async () => {
         }
     });
 
-    //register service Routes
-    server.route(userRoutes);
-    server.route(apartmentRoutes);
+    //register user Routes
+    userRoutes.forEach((route: any) => {
+        server.route(route);
+    }) 
+    
+    //register apartment routes
+    apartmentRoutes.forEach((route: any) => {
+        server.route(route);
+    }) 
 
     //db connection with Authentication and Avl support
     const dbOptions = {

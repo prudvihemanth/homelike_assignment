@@ -12,6 +12,7 @@ const userRoutes = [{
     path: `${basePath}registerUser`,
     handler: controller.registerUser,
     options: {
+        auth: false,
         description: 'Get todo',
         notes: 'Returns a todo item by the id passed in the path',
         tags: ['api'], // ADD THIS TAG
@@ -19,6 +20,7 @@ const userRoutes = [{
             payload: Joi.object({
                 firstName: Joi.string().min(3).max(15).required(),
                 lastName: Joi.string().min(3).max(15).required(),
+                role: Joi.string().valid('USER','TENANT').required(),
                 email: Joi.string()
                     .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
                 password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
@@ -32,6 +34,7 @@ const userRoutes = [{
     path: `${basePath}login`,
     handler: controller.login,
     options: {
+        auth: false,
         description: 'Get todo',
         notes: 'Returns a todo item by the id passed in the path',
         tags: ['api'], // ADD THIS TAG
@@ -48,17 +51,19 @@ const userRoutes = [{
 {
     method: 'GET',
     path: `${basePath}getUsersList`,
-    handler: controller.getUsersList,
     options: {
+        auth: 'jwt',
+        plugins: {'hapiAuthorization': {roles: ['TENANT', 'USER']}},
         description: 'Get todo',
         notes: 'Returns a todo item by the id passed in the path',
         tags: ['api'], // ADD THIS TAG
         validate: {
-            query: Joi.object({
-                limit: Joi.number().integer().min(1).max(100).default(10)
-            })
+            headers: Joi.object({
+                authorization: Joi.string().required()
+            }).options({ allowUnknown: true })
         }
-    }
+    },
+    handler: controller.getUsersList
 }]
 
 

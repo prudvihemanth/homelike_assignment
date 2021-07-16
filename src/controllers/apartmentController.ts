@@ -1,5 +1,9 @@
 import { Request, ResponseToolkit } from "@hapi/hapi";
 import { apartmentSchema } from "../schemas/apartmentSchema";
+import { userSchema } from "../schemas/userSchema";
+import { ObjectId } from "mongoose";
+
+
 import Logger from "../utils/logger";
 
 
@@ -24,12 +28,28 @@ export class apartmentController {
         }
     }
 
-    markFavouriteApartment (request: Request, h: ResponseToolkit): string {
-        return `Hello ${request.params.name}!`;
+  async  markFavouriteApartment (request: any, h: ResponseToolkit): Promise<any> {
+        try {
+            const result = await userSchema.updateOne({ _id: "60f024179f53e49e9f61659a"}, 
+                { $push: { favouriteApartments: "60effc36957e08d97bc1168c"} });
+            Logger.info(result);
+            return result;
+        }
+        catch (e) {
+            Logger.error(e)
+            return e;
+        }
     }
 
-    listFavouriteApartments (request: Request, h: ResponseToolkit): string {
-        return `Hello ${request.params.name}!`;
-    }
+  async  listFavouriteApartments (request: Request, h: ResponseToolkit):  Promise<any> {
+    try{
+        const user = await userSchema.find({ _id: "60f024179f53e49e9f61659a"}).populate('favouriteApartments');
+        if(user[0])
+        return user[0].favouriteApartments;
+       }
+       catch(e) {
+           return e;
+       }
+    }    
 
 }

@@ -23,7 +23,7 @@ const plugins = [
     {
         plugin: require('hapi-authorization'),
         options: {
-            roles: ['ADMIN', 'USER', 'OWNER']	
+            roles: ['TENANT', 'USER']	
         }
     },
     {
