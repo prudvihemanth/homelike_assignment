@@ -1,5 +1,6 @@
 import { Server } from "@hapi/hapi";
 import mongoose from 'mongoose';
+import Path from "path";
 
 import Logger from "./src/utils/logger";
 import plugins from "./src/plugins/plugins"
@@ -52,6 +53,21 @@ const init = async () => {
         },
         handler: () => {
             return { service: "homelike", version: "v1", status: "up" };
+        }
+    });
+
+    //serve tsdocs
+    server.route({
+        method: 'GET',
+        path: '/{param*}',
+        options: {
+            auth: false
+        },
+        handler: {
+            directory: {
+                path: Path.join(__dirname, 'docs'),
+                listing: true
+            }
         }
     });
 
