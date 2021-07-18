@@ -22,7 +22,7 @@ const userRoutes = [{
                 role: Joi.string().valid('USER','TENANT').required(),
                 email: Joi.string()
                     .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
-                password: Joi.string().pattern(new RegExp('(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}'))
+                password: Joi.string().pattern(new RegExp("(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"))
                     .required()
             })
         }
@@ -41,7 +41,7 @@ const userRoutes = [{
             payload: Joi.object({
                 email: Joi.string()
                     .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
-                password: Joi.string().pattern(new RegExp('(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}'))
+                password: Joi.string().pattern(new RegExp("(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"))
                     .required()
             })
         }

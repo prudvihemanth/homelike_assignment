@@ -16,8 +16,8 @@ const validate = controller.validate;
 const init = async () => {
 
     const server: Server = new Server({
-        port: 3000,
-        host: 'localhost',
+        port: 80,
+        host: '0.0.0.0',
             routes: {
                 validate: {
                     failAction: (request, h, err) => {
@@ -65,7 +65,7 @@ const init = async () => {
         },
         handler: {
             directory: {
-                path: Path.join(__dirname, 'docs'),
+                path: "./docs",
                 listing: true
             }
         }
@@ -89,11 +89,11 @@ const init = async () => {
         useCreateIndex: true
     };
 
-    let isConnectedBefore = false;
+   let isConnectedBefore = false;
 
     let connect = async () => {
 
-        await mongoose.connect('mongodb://localhost:27017/homelike', dbOptions, (err) => { 
+        await mongoose.connect('mongodb://mongo:27017/homelike', dbOptions, (err) => { 
 
             if (err) {
                 Logger.error("mongodb connection error", err);
@@ -137,7 +137,7 @@ const init = async () => {
 
     await server.start();
 
-    await connect();
+   await connect();
 
     Logger.info(`Server running on ${server.info.uri}`);
 };

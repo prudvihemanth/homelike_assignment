@@ -7,8 +7,11 @@
     "start": "npm run build && node ./build/index.js",
     "start:dev": "nodemon index.ts",
     "build": "tsc --project ./",
-    "test": "nyc mocha",
-    "coverage": "nyc report --reporter=text-lcov",
+    "test": "mocha --recursive test/**/*.ts  --reporter list",
+    "coverage": "nyc npm run test",
+    "coverageAcceptance": "nyc check-coverage --statement -5 --branch -3 --function 50",
+    "precommit": "npm test && npm run lint",
+    "prepush": "npm run coverageAcceptance",
     "docs": "npx typedoc --out docs src"
   },
   "keywords": [],
