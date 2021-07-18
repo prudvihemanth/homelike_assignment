@@ -9,6 +9,17 @@ import Logger from "../utils/logger";
 
 export class apartmentController {
 
+   /**
+   * Search for Apartments.
+   *
+   * @remarks
+   * This method is part of Apartment registration and searching.
+   *
+   * @param request - Payload object should contain parameters like city, country, address and filters like number of rooms.
+   * @returns The array of apartments matching the search query
+   *
+   */
+
     async searchApartment(request: any, h: ResponseToolkit): Promise<any> {
 
         let latitude = null;
@@ -118,6 +129,17 @@ export class apartmentController {
 
     }
 
+   /**
+   * Login as Tenanat & Create an apartment.
+   *
+   * @remarks
+   * This method is part of Apartment registration and searching.
+   *
+   * @param request - Payload object should apartment details like location, amenities, price etc.
+   * @returns The aprtment object saved in database
+   *
+   */
+
     async createApartment(request: any, h: ResponseToolkit): Promise<any> {
         let location = "";
         if (request.payload.town) {
@@ -152,6 +174,17 @@ export class apartmentController {
         }
     }
 
+    
+   /**
+   * Login as User & Mark apartment as favourite.
+   *
+   * @remarks
+   * This method is part of Apartment registration and searching.
+   *
+   * @param request - Request params should contain apartment Id
+   * @returns Returns success object from db
+   *
+   */
     async markFavouriteApartment(request: any, h: ResponseToolkit): Promise<any> {
         try {
             const result = await userSchema.updateOne({ _id: request.context._id },
@@ -164,6 +197,17 @@ export class apartmentController {
             return e;
         }
     }
+
+   /**
+   * Login as User & List all favourite apartments.
+   *
+   * @remarks
+   * This method is part of Apartment registration and searching.
+   *
+   * @param request - Request Headers should contain autherization token 
+   * @returns Populates array of favourite apartments for the user
+   *
+   */
 
     async listFavouriteApartments(request: any, h: ResponseToolkit): Promise<any> {
         try {

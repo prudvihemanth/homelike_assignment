@@ -10,6 +10,17 @@ const controller = new authController();
 
 export class userController {
 
+   /**
+   * Register a user/tenant.
+   *
+   * @remarks
+   * This method is part of the User registration and Login.
+   *
+   * @param request - Payload Should be an object and should contain role, firstname, lastname, email and password
+   * @returns The newly registered user/tenanat
+   *
+   */
+
     async registerUser(request: any, h: ResponseToolkit) {
         const hashedPassword = await controller.generateHash(request.payload.password)
         const user = new userSchema(
@@ -32,6 +43,18 @@ export class userController {
         }
 
     }
+
+
+   /**
+   * Login as User/Tenant.
+   *
+   * @remarks
+   * This method is part of the User registration and Login.
+   *
+   * @param request - Payload object should contain email and password.
+   * @returns The Jwt token, logged in user details
+   *
+   */
 
     async login(request: any, h: ResponseToolkit): Promise<any> {
         try {
@@ -64,6 +87,18 @@ export class userController {
             return (err.message)
         }
     }
+
+   
+   /**
+   * List all users.
+   *
+   * @remarks
+   * This method is part of the User registration and Login.
+   *
+   * @param request - Headers should contain authorization token
+   * @returns Array of user objects
+   *
+   */ 
 
    async getUsersList(request: any, h: ResponseToolkit):  Promise<any> {
        try{
