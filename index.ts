@@ -16,7 +16,14 @@ const init = async () => {
 
     const server: Server = new Server({
         port: 3000,
-        host: 'localhost'
+        host: 'localhost',
+            routes: {
+                validate: {
+                    failAction: (request, h, err) => {
+                        throw err;
+                    }
+                }
+            }
     });
 
     const basePath: string = "/api/v1/";

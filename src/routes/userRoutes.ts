@@ -1,5 +1,4 @@
 import Joi from "joi";
-
 import { userController } from "../controllers/userController";
 
 
@@ -13,9 +12,9 @@ const userRoutes = [{
     handler: controller.registerUser,
     options: {
         auth: false,
-        description: 'Get todo',
-        notes: 'Returns a todo item by the id passed in the path',
-        tags: ['api'], // ADD THIS TAG
+        description: 'Register a new User',
+        notes: 'ECreates a new Tenant/User and returns User Object. Email must be unique and password Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters',
+        tags: ['api'], 
         validate: {
             payload: Joi.object({
                 firstName: Joi.string().min(3).max(15).required(),
@@ -23,7 +22,7 @@ const userRoutes = [{
                 role: Joi.string().valid('USER','TENANT').required(),
                 email: Joi.string()
                     .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
-                password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+                password: Joi.string().pattern(new RegExp('(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}'))
                     .required()
             })
         }
@@ -35,14 +34,14 @@ const userRoutes = [{
     handler: controller.login,
     options: {
         auth: false,
-        description: 'Get todo',
-        notes: 'Returns a todo item by the id passed in the path',
-        tags: ['api'], // ADD THIS TAG
+        description: 'Login as User/Tenant',
+        notes: 'Returns logged in user with a jwt token. Ensure Password Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters',
+        tags: ['api'], 
         validate: {
             payload: Joi.object({
                 email: Joi.string()
                     .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
-                password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+                password: Joi.string().pattern(new RegExp('(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}'))
                     .required()
             })
         }
@@ -54,9 +53,9 @@ const userRoutes = [{
     options: {
         auth: 'jwt',
         plugins: {'hapiAuthorization': {roles: ['TENANT', 'USER']}},
-        description: 'Get todo',
-        notes: 'Returns a todo item by the id passed in the path',
-        tags: ['api'], // ADD THIS TAG
+        description: 'Get List Of All Users',
+        notes: 'Returns array of all users',
+        tags: ['api'], 
         validate: {
             headers: Joi.object({
                 authorization: Joi.string().required()
