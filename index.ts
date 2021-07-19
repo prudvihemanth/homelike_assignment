@@ -1,7 +1,5 @@
-import { Server } from "@hapi/hapi";
+import {  Server } from "@hapi/hapi";
 import mongoose from 'mongoose';
-import Path from "path";
-
 import Logger from "./src/utils/logger";
 import plugins from "./src/plugins/plugins"
 import userRoutes from "./src/routes/userRoutes";
@@ -16,7 +14,7 @@ const validate = controller.validate;
 const init = async () => {
 
     const server: Server = new Server({
-        port: 80,
+        port: 3000,
         host: '0.0.0.0',
             routes: {
                 validate: {
@@ -56,6 +54,7 @@ const init = async () => {
         }
     });
 
+
     //serve tsdocs
     server.route({
         method: 'GET',
@@ -65,8 +64,23 @@ const init = async () => {
         },
         handler: {
             directory: {
-                path: "./docs",
-                listing: true
+            path: "./coverage",
+            listing: true
+        }
+        }
+    });
+
+  
+    // serve mocha coverage report
+    server.route({
+        method: 'GET',
+        path: '/coverage/{path*}',
+        options: {
+            auth: false
+        },
+        handler: {
+            directory: {
+            path: "./coverage",
             }
         }
     });
@@ -93,7 +107,7 @@ const init = async () => {
 
     let connect = async () => {
 
-        await mongoose.connect('mongodb://mongo:27017/homelike', dbOptions, (err) => { 
+        await mongoose.connect('mongodb://localhost:27017/homelike', dbOptions, (err) => { 
 
             if (err) {
                 Logger.error("mongodb connection error", err);
@@ -135,7 +149,7 @@ const init = async () => {
     });
 
 
-    await server.start();
+   await server.start();
 
    await connect();
 
