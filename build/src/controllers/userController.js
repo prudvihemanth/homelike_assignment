@@ -13,11 +13,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
+const boom_1 = __importDefault(require("@hapi/boom"));
 const logger_1 = __importDefault(require("../utils/logger"));
 const auth_1 = require("../utils/auth");
 const userSchema_1 = require("../schemas/userSchema");
 const controller = new auth_1.authController();
 class userController {
+    /**
+    * Register a user/tenant.
+    *
+    * @remarks
+    * This method is part of the User registration and Login.
+    *
+    * @param request - Payload Should be an object and should contain role, firstname, lastname, email and password
+    * @returns The newly registered user/tenanat
+    *
+    */
     registerUser(request, h) {
         return __awaiter(this, void 0, void 0, function* () {
             const hashedPassword = yield controller.generateHash(request.payload.password);
@@ -25,44 +36,84 @@ class userController {
                 firstName: request.payload.firstName,
                 lastName: request.payload.lastName,
                 email: request.payload.email,
-                password: hashedPassword
+                password: hashedPassword,
+                role: request.payload.role
             });
             try {
                 const result = yield user.save();
-                logger_1.default.info("coming first----");
-                logger_1.default.info("new user saved with email", result.email);
-                return result;
+                logger_1.default.info(`user ${request.payload.email} successfully registered.`);
+                return h.response(result).code(201);
             }
             catch (e) {
-                logger_1.default.error(e);
-                return e;
+                logger_1.default.error(`error registering user ${request.payload.email}, message: ${e.message}`);
+                return boom_1.default.conflict(e.message);
             }
         });
     }
+    /**
+    * Login as User/Tenant.
+    *
+    * @remarks
+    * This method is part of the User registration and Login.
+    *
+    * @param request - Payload object should contain email and password.
+    * @returns The Jwt token, logged in user details
+    *
+    */
     login(request, h) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = yield userSchema_1.userSchema.find({ email: request.payload.email });
-                if (user) {
-                    logger_1.default.info(user[0].password);
+                let user = yield userSchema_1.userSchema.find({ email: request.payload.email });
+                if (user[0]) {
                     const isPasswordCorrect = yield controller.compareHash(request.payload.password, user[0].password);
                     if (isPasswordCorrect) {
-                        return user;
+                        const token = yield controller.createToken(user[0]);
+                        const response = {
+                            token: token,
+                            _id: user[0]._id,
+                            email: user[0].email,
+                            role: user[0].role
+                        };
+                        return response;
                     }
                     else {
-                        logger_1.default.error("password mismatch");
-                        throw new Error('wrong password proovided');
+                        logger_1.default.error(`password mismatch for user ${request.payload.email}`);
+                        return boom_1.default.conflict('wrong password proovided');
                     }
+                }
+                else {
+                    logger_1.default.error(`user not found for  ${request.payload.email}`);
+                    return boom_1.default.notFound('user not found');
                 }
             }
             catch (err) {
-                logger_1.default.error(err);
-                return err;
+                logger_1.default.error(`error logging in for user  ${request.payload.email}, message: ${err.message}`);
+                return (err.message);
             }
         });
     }
+    /**
+    * List all users.
+    *
+    * @remarks
+    * This method is part of the User registration and Login.
+    *
+    * @param request - Headers should contain authorization token
+    * @returns Array of user objects
+    *
+    */
     getUsersList(request, h) {
-        return 'Hello dear users';
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const users = yield userSchema_1.userSchema.find();
+                logger_1.default.info('Get users list successful');
+                return users;
+            }
+            catch (e) {
+                logger_1.default.error(`Get users list failure with ${e.message}`);
+                return e;
+            }
+        });
     }
 }
 exports.userController = userController;

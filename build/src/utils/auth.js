@@ -35,34 +35,70 @@ exports.authController = void 0;
 const JWT = __importStar(require("jsonwebtoken"));
 const bcrypt = __importStar(require("bcrypt"));
 const logger_1 = __importDefault(require("./logger"));
+const userSchema_1 = require("../schemas/userSchema");
 class authController {
-    constructor() {
-        /**
-          * Generates a JWT token.
-          *
-          * @remarks
-          * This method is part of the {@link core-library#Statistics | Statistics subsystem}.
-          *
-          * @param x - The first input number
-          * @param y - The second input number
-          * @returns The arithmetic mean of `x` and `y`
-          *
-          * @beta
-          */
-        this.createToken = () => {
-            return JWT.sign({ foo: 'bar' }, "afaf");
-        };
+    /**
+     * Create jwt token for valid email and password.
+     *
+     * @remarks
+     * This method is part of Authentication and Autherization.
+     *
+     * @param userObj - Request payload should contain user object
+     * @returns Returns token
+     *
+     */
+    createToken(userObj) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = {
+                    id: userObj._id,
+                    email: userObj.email,
+                    role: userObj.role
+                };
+                const token = yield JWT.sign(user, 'shhhhh', { expiresIn: '1h' });
+                return token;
+            }
+            catch (e) {
+                logger_1.default.error(e);
+                return e;
+            }
+        });
     }
-    validate() {
-        // do your checks to see if the person is valid
-        if (true) {
-            return { isValid: false };
-        }
-        else {
-            return { isValid: true };
-        }
+    /**
+     * Validate jwt token for valid user id.
+     *
+     * @remarks
+     * This method is part of Authentication and Autherization.
+     *
+     * @param decoded - decoded jwt token
+     * @param request - Append context to the request object
+  
+     * @returns Returns boolean true/false if user id matches the id in database
+     *
+     */
+    validate(decoded, request) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield userSchema_1.userSchema.findOne({ _id: decoded.id });
+            if (user) {
+                request.context = user;
+                return { isValid: true };
+            }
+            else {
+                return { isValid: false };
+            }
+        });
     }
     ;
+    /**
+      * Generate hash for plain password.
+      *
+      * @remarks
+      * This method is part of Authentication and Autherization.
+      *
+      * @param password - plain password which needs to be encrypted
+      * @returns Returns hashed password to be stored in db
+      *
+      */
     generateHash(password) {
         return __awaiter(this, void 0, void 0, function* () {
             const saltRounds = 10;
@@ -77,10 +113,21 @@ class authController {
         });
     }
     ;
+    /**
+     * Compare hash and plain password.
+     *
+     * @remarks
+     * This method is part of Authentication and Autherization.
+     *
+     * @param password - plain password from request payload
+     * @param hash - hashed  password from db
+  
+     * @returns Returns boolean true/false if plain password matches the decoded hash
+     *
+     */
     compareHash(password, hash) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                logger_1.default.info(password, hash);
                 const isPasswordCorrect = yield bcrypt.compare(password, hash);
                 return isPasswordCorrect;
             }

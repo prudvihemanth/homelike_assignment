@@ -11,23 +11,33 @@ const apartmentRoutes = [
     {
         method: 'POST',
         path: `${basePath}createApartment`,
-        handler: controller.searchApartment,
+        handler: controller.createApartment,
         options: {
-            description: 'Get todo',
-            notes: 'Returns a todo item by the id passed in the path',
+            auth: 'jwt',
+            plugins: { 'hapiAuthorization': { roles: ['TENANT'] } },
+            description: 'Create an Apartment',
+            notes: 'Login as Tenant and create an apartment, response is the apartment object.',
             tags: ['api'],
             validate: {
+                headers: joi_1.default.object({
+                    authorization: joi_1.default.string().required()
+                }).options({ allowUnknown: true }),
                 payload: joi_1.default.object({
                     location: {
-                        city: joi_1.default.string().min(3).max(10),
-                        country: joi_1.default.string().min(3).max(10)
+                        apartmentNumber: joi_1.default.number().min(0).max(1000000),
+                        streetName: joi_1.default.string().min(2).max(300).required(),
+                        town: joi_1.default.string().min(2).max(300).optional(),
+                        zipcode: joi_1.default.number().min(2).max(1000000).required(),
+                        city: joi_1.default.string().min(2).max(300).required(),
+                        country: joi_1.default.string().min(2).max(30).required()
                     },
                     details: {
-                        title: joi_1.default.string().min(5).max(30).required(),
-                        description: joi_1.default.string().min(10).max(200).required(),
+                        title: joi_1.default.string().min(3).max(30).required(),
+                        description: joi_1.default.string().min(3).max(200).required(),
                     },
                     layout: {
-                        noOfBedrooms: joi_1.default.number().min(1).max(10).required(),
+                        noOfRooms: joi_1.default.number().min(1).max(20),
+                        noOfBedrooms: joi_1.default.number().min(1).max(10),
                         isDining: joi_1.default.boolean(),
                         isKitchen: joi_1.default.boolean()
                     },
@@ -46,8 +56,8 @@ const apartmentRoutes = [
                         }
                     },
                     pricing: {
-                        rentInEur0: joi_1.default.number().min(100).max(5000),
-                        depositMonths: joi_1.default.number().min(0).max(12),
+                        rentInEuro: joi_1.default.number().min(100).max(5000).required(),
+                        depositMonths: joi_1.default.number().min(0).max(12).required(),
                     }
                 })
             }
@@ -55,26 +65,29 @@ const apartmentRoutes = [
     },
     {
         method: 'POST',
-        path: `${basePath}searchApartment/{name}`,
+        path: `${basePath}searchApartment`,
         handler: controller.searchApartment,
         options: {
-            description: 'Get todo',
-            notes: 'Returns a todo item by the id passed in the path',
+            auth: 'jwt',
+            plugins: { 'hapiAuthorization': { roles: ['TENANT', 'USER'] } },
+            description: 'Search for apartments',
+            notes: 'Get all nearby apartments by passing filters like city, country, no of rooms etc. Returns array of apartments',
             tags: ['api'],
             validate: {
+                headers: joi_1.default.object({
+                    authorization: joi_1.default.string().required()
+                }).options({ allowUnknown: true }),
                 payload: joi_1.default.object({
                     location: {
-                        city: joi_1.default.string().min(3).max(10),
-                        country: joi_1.default.string().min(3).max(10)
+                        address: joi_1.default.string().min(2).max(300).allow(''),
+                        city: joi_1.default.string().min(2).max(300).allow(''),
+                        country: joi_1.default.string().min(2).max(30).allow('')
                     },
-                    filters: {
-                        totalRooms: joi_1.default.number().min(1).max(15),
+                    filter: {
+                        noOfRooms: joi_1.default.number().min(1).max(20).required(),
                         nearestToKms: joi_1.default.allow(10, 20)
-                    },
-                    geoLocation: {
-                        address: joi_1.default.string().min(3).max(10)
                     }
-                })
+                }),
             }
         }
     },
@@ -83,12 +96,17 @@ const apartmentRoutes = [
         path: `${basePath}markFavouriteApartment/{apartmentId}`,
         handler: controller.markFavouriteApartment,
         options: {
-            description: 'Get todo',
-            notes: 'Returns a todo item by the id passed in the path',
+            auth: 'jwt',
+            plugins: { 'hapiAuthorization': { roles: ['USER'] } },
+            description: 'Login as User and Mark an apartment as favourite',
+            notes: 'Returns the db response after marking favourite ',
             tags: ['api'],
             validate: {
+                headers: joi_1.default.object({
+                    authorization: joi_1.default.string().required()
+                }).options({ allowUnknown: true }),
                 params: joi_1.default.object({
-                    apartmentId: joi_1.default.string().min(8).max(20)
+                    apartmentId: joi_1.default.string().min(8).max(40)
                 })
             }
         }
@@ -96,16 +114,17 @@ const apartmentRoutes = [
     {
         method: 'GET',
         path: `${basePath}listFavouriteApartments`,
-        handler: controller.searchApartment,
+        handler: controller.listFavouriteApartments,
         options: {
-            auth: false,
-            description: 'Get todo',
-            notes: 'Returns a todo item by the id passed in the path',
+            auth: 'jwt',
+            plugins: { 'hapiAuthorization': { roles: ['USER'] } },
+            description: 'List all Favourite apartments',
+            notes: 'Login as User and it returns all favourite apartments',
             tags: ['api'],
             validate: {
-                query: joi_1.default.object({
-                    limit: joi_1.default.number().integer().min(1).max(100).default(10)
-                })
+                headers: joi_1.default.object({
+                    authorization: joi_1.default.string().required()
+                }).options({ allowUnknown: true }),
             }
         }
     }

@@ -37,25 +37,33 @@ const logger_1 = __importDefault(require("./src/utils/logger"));
 const plugins_1 = __importDefault(require("./src/plugins/plugins"));
 const userRoutes_1 = __importDefault(require("./src/routes/userRoutes"));
 const apartmentRoutes_1 = __importDefault(require("./src/routes/apartmentRoutes"));
-//import { validate } from "./src/utils/auth"
+const auth_1 = require("./src/utils/auth");
 const dotenv = __importStar(require("dotenv"));
+const controller = new auth_1.authController();
+const validate = controller.validate;
 const init = () => __awaiter(void 0, void 0, void 0, function* () {
     const server = new hapi_1.Server({
-        port: 3000,
-        host: 'localhost'
+        port: 80,
+        host: '0.0.0.0',
+        routes: {
+            validate: {
+                failAction: (request, h, err) => {
+                    throw err;
+                }
+            }
+        }
     });
     const basePath = "/api/v1/";
     //register env
     dotenv.config();
     // register Hapi js plugins
     yield server.register(plugins_1.default);
-    //define auth strategy
-    // server.auth.strategy('jwt', 'jwt',
-    //     {
-    //         key: process.env.AUTH_SECRET,
-    //         validate
-    //     });
-    // server.auth.default('jwt');
+    // define auth strategy
+    server.auth.strategy('jwt', 'jwt', {
+        key: "shhhhh",
+        validate,
+    });
+    server.auth.default('jwt');
     //service heartbeat route
     server.route({
         method: 'GET',
@@ -67,8 +75,41 @@ const init = () => __awaiter(void 0, void 0, void 0, function* () {
             return { service: "homelike", version: "v1", status: "up" };
         }
     });
-    //register service Routes
-    server.route([...userRoutes_1.default, ...apartmentRoutes_1.default]);
+    //serve tsdocs
+    server.route({
+        method: 'GET',
+        path: '/{param*}',
+        options: {
+            auth: false
+        },
+        handler: {
+            directory: {
+                path: "./coverage",
+                listing: true
+            }
+        }
+    });
+    // serve mocha nyc coverage report
+    server.route({
+        method: 'GET',
+        path: '/coverage/{path*}',
+        options: {
+            auth: false
+        },
+        handler: {
+            directory: {
+                path: "./coverage",
+            }
+        }
+    });
+    //register user Routes
+    userRoutes_1.default.forEach((route) => {
+        server.route(route);
+    });
+    //register apartment routes
+    apartmentRoutes_1.default.forEach((route) => {
+        server.route(route);
+    });
     //db connection with Authentication and Avl support
     const dbOptions = {
         useNewUrlParser: true,
@@ -78,7 +119,7 @@ const init = () => __awaiter(void 0, void 0, void 0, function* () {
     };
     let isConnectedBefore = false;
     let connect = () => __awaiter(void 0, void 0, void 0, function* () {
-        yield mongoose_1.default.connect('mongodb://localhost:27017/homelike', dbOptions, (err) => {
+        yield mongoose_1.default.connect('mongodb://0.0.0.0:27017/homelike', dbOptions, (err) => {
             if (err) {
                 logger_1.default.error("mongodb connection error", err);
             }

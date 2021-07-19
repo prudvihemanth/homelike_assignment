@@ -26,11 +26,13 @@ const schema = new mongoose_1.Schema({
     firstName: { type: String },
     lastName: { type: String },
     email: { type: String, required: true },
-    password: { type: String, required: true },
+    password: {
+        type: String, required: true
+    },
     isActive: { type: Boolean, default: true },
     created_date: { type: Date, default: Date.now },
-    //  favouriteApartments: [{ type : ObjectId, ref: 'User' }], 
+    role: { type: String, required: true, enum: ['USER', 'TENANT'] },
+    favouriteApartments: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'Apartment', unique: true }],
 });
 schema.index({ email: 1 }, { unique: true });
 exports.userSchema = mongoose.model('User', schema);
-//register (202), return all users (200), login (200), mark favourite (), list all favourite apartments ()
