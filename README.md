@@ -23,12 +23,12 @@ From root of the project run the command “npm run start:dev”
 - Swagger Documentation
 - Typescript Documentation
 - Logger with Winston
-- Tslint and Husky (Githooks)
 - Docker-compose to run project with a single command
 - Unit test cases using Mocha, Chai and Sinon. Code coverage with Istanbul
 - Deployed backend app in Aws EC2
 - CI was done using Jenkins
 - Domain name (jsassignment.in) was mapped to the deployed code.
+  
 
 
 **References:**

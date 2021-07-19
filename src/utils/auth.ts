@@ -29,8 +29,8 @@ export class authController {
       return token;
     }
     catch (e: any) {
-      // Logger.error(e)
-      return e.message
+      Logger.error(e)
+      return e
     }
   }
 
