@@ -14,7 +14,7 @@ const validate = controller.validate;
 const init = async () => {
 
     const server: Server = new Server({
-        port: 80,
+        port: 3000,
         host: '0.0.0.0',
             routes: {
                 validate: {

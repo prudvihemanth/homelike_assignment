@@ -27,7 +27,6 @@ describe('Auth Controller', () => {
            const token =  await controller.createToken(user);
            Logger.info(token);
            expect(token).to.throw(new Error(`Cannot read property '_id' of null`));
-        
         });
     })
     
