@@ -55,7 +55,7 @@ const init = async () => {
     });
 
 
-    //serve tsdocs
+    //serve istanbul test cases coverage
     server.route({
         method: 'GET',
         path: '/{param*}',
