@@ -14,8 +14,8 @@ const validate = controller.validate;
 const init = async () => {
 
     const server: Server = new Server({
-        port: 80,
-        host: '0.0.0.0',
+        port: 3000,
+        host: 'localhost',
             routes: {
                 validate: {
                     failAction: (request, h, err) => {
@@ -70,21 +70,6 @@ const init = async () => {
         }
     });
 
-  
-    // serve mocha nyc coverage report
-    server.route({
-        method: 'GET',
-        path: '/coverage/{path*}',
-        options: {
-            auth: false
-        },
-        handler: {
-            directory: {
-            path: "./coverage",
-            }
-        }
-    });
-
     //register user Routes
     userRoutes.forEach((route: any) => {
         server.route(route);
@@ -107,7 +92,7 @@ const init = async () => {
 
     let connect = async () => {
 
-        await mongoose.connect('mongodb://mongo:27017/homelike', dbOptions, (err) => { 
+        await mongoose.connect('mongodb://localhost:27017/homelike', dbOptions, (err) => { 
 
             if (err) {
                 Logger.error("mongodb connection error", err);

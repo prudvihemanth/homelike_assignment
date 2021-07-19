@@ -10,7 +10,7 @@ Go to the root of the project and run the command: “docker-compose up”
 **Without docker:**
 Ensure the latest stable versions of Node, Npm and Mongo are Installed.
 
-Change the host of mongo url from "localhost" to "mongo" in index.ts file. Go to the root of the project and run the command: “npm install”
+Go to the root of the project and run the command: “npm install”
 
 From root of the project run the command “npm run start:dev”
 
@@ -39,8 +39,8 @@ Create Apartment: (Took reference from here: https://support.thehomelike.com/hc/
 
 Github:  https://github.com/prudvihemanth/homelike_assignment
 
-Swagger Documentation: (Refer to payload model before making api call through swagger)
+Swagger Documentation: http://localhost:3000/documentation (Refer to payload model before making api call through swagger)
 
-Typescript Docs:
+Typescript Docs: Go to the docs folder and open index.html in any browser
 
-Code Coverage:
+Code Coverage:  http://localhost:3000 (nyc test cases coverage)
