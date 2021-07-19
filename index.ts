@@ -71,7 +71,7 @@ const init = async () => {
     });
 
   
-    // serve mocha coverage report
+    // serve mocha nyc coverage report
     server.route({
         method: 'GET',
         path: '/coverage/{path*}',
