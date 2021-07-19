@@ -8,7 +8,7 @@ import { userSchema } from "../../src/schemas/userSchema";
 
 const controller = new authController();
 
-describe('Auth COntroller', () => {
+describe('Auth Controller', () => {
 
     describe("Create Token", () => {
         it("Should return a jwt Token", async () => {
@@ -20,6 +20,13 @@ describe('Auth COntroller', () => {
     
            const token =  await controller.createToken(user);
            expect(token).to.be.a('string');
+        
+        });
+        it("Should return error", async () => {
+           const user = null;
+           const token =  await controller.createToken(user);
+           Logger.info(token);
+           expect(token).to.throw(new Error(`Cannot read property '_id' of null`));
         
         });
     })
@@ -38,9 +45,9 @@ describe('Auth COntroller', () => {
               .resolves(Promise.resolve(decodedUser))
               .returns({ isValid: true });
 
-              validateStub.withArgs({}).returns({ isValid: true });
+            validateStub.withArgs({}).returns({ isValid: true });
 
-            expect(validateStub.calledOnce).to.be.true;
+            expect(validateStub.calledTwice).to.be.true;
         })
 
         it("Should validate to false", async () => {

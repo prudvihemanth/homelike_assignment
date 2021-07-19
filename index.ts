@@ -14,7 +14,7 @@ const validate = controller.validate;
 const init = async () => {
 
     const server: Server = new Server({
-        port: 80,
+        port: 3000,
         host: '0.0.0.0',
             routes: {
                 validate: {
@@ -107,7 +107,7 @@ const init = async () => {
 
     let connect = async () => {
 
-        await mongoose.connect('mongodb://mongo:27017/homelike', dbOptions, (err) => { 
+        await mongoose.connect('mongodb://localhost:27017/homelike', dbOptions, (err) => { 
 
             if (err) {
                 Logger.error("mongodb connection error", err);

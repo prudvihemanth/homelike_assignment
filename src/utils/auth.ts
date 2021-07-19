@@ -28,9 +28,9 @@ export class authController {
       const token = await JWT.sign(user, 'shhhhh',{expiresIn: '1h'});
       return token;
     }
-    catch (e) {
-      Logger.error(e)
-      return e
+    catch (e: any) {
+      // Logger.error(e)
+      return e.message
     }
   }
 
