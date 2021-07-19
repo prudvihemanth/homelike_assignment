@@ -5,7 +5,7 @@
 **How to run the project:**
 
 **With docker:**
-Go to the root of the project and run the command: “docker-compose up”
+Go to the root of the project, in the file index.ts change mongohost to "mongo" and server host to "0.0.0.0" and run the command: “docker-compose up”
 
 **Without docker:**
 Ensure the latest stable versions of Node, Npm and Mongo are Installed.
