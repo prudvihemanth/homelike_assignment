@@ -10,11 +10,11 @@ Go to the root of the project and run the command: “docker-compose up”
 **Without docker:**
 Ensure the latest stable versions of Node, Npm and Mongo are Installed.
 
-Go to the root of the project and run the command: “npm install”
+Change the host of mongo url from "localhost" to "mongo" in index.ts file. Go to the root of the project and run the command: “npm install”
 
 From root of the project run the command “npm run start:dev”
 
-**Features Implemente:**
+**Features Implemented:**
 - Hapi Js withTypescript 
 - Authentication (jwt)
 - Authorization (TENANT & USER roles)
