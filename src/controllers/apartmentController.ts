@@ -149,7 +149,7 @@ export class apartmentController {
             location = `${request.payload.location.apartmentNo}+${request.payload.location.streetName}+${request.payload.location.city}+${request.payload.location.country}+${request.payload.location.zipcode}`
         }
 
-        const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=AIzaSyD1i4morv3Sw2Y2DeGi1PIEk6tV4oUw6Ao`;
+        const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=AIzaSyBrhdUEKForI3CQa_sGeVkhCbbIWaswKA4`;
 
         const geoLocation = await fetch(url)
             .then(res => res.json())

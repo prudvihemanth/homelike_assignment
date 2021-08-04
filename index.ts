@@ -5,7 +5,7 @@ import plugins from "./src/plugins/plugins"
 import userRoutes from "./src/routes/userRoutes";
 import apartmentRoutes from "./src/routes/apartmentRoutes";
 import { authController } from "./src/utils/auth";
-import * as dotenv from "dotenv";
+// import * as dotenv from "dotenv";
 
 const controller = new authController();
 
@@ -15,7 +15,7 @@ const init = async () => {
 
     const server: Server = new Server({
         port: 3000,
-        host: 'localhost',
+        host: '0.0.0.0',
             routes: {
                 validate: {
                     failAction: (request, h, err) => {
@@ -28,7 +28,7 @@ const init = async () => {
     const basePath: string = "/api/v1/";
 
     //register env
-    dotenv.config();
+    require('dotenv').config()
 
     // register Hapi js plugins
     await server.register(plugins);
