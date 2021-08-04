@@ -32,7 +32,7 @@ const schema = new mongoose_1.Schema({
     isActive: { type: Boolean, default: true },
     created_date: { type: Date, default: Date.now },
     role: { type: String, required: true, enum: ['USER', 'TENANT'] },
-    favouriteApartments: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'Apartment', unique: true }],
+    favouriteApartments: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'Apartment' }],
 });
 schema.index({ email: 1 }, { unique: true });
 exports.userSchema = mongoose.model('User', schema);
