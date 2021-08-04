@@ -25,7 +25,7 @@ const validate = controller.validate;
 const init = () => __awaiter(void 0, void 0, void 0, function* () {
     const server = new hapi_1.Server({
         port: 3000,
-        host: 'localhost',
+        host: '0.0.0.0',
         routes: {
             validate: {
                 failAction: (request, h, err) => {
@@ -87,7 +87,7 @@ const init = () => __awaiter(void 0, void 0, void 0, function* () {
     };
     let isConnectedBefore = false;
     let connect = () => __awaiter(void 0, void 0, void 0, function* () {
-        yield mongoose_1.default.connect('mongodb://localhost:27017/homelike', dbOptions, (err) => {
+        yield mongoose_1.default.connect('mongodb://0.0.0.0:27017/homelike', dbOptions, (err) => {
             if (err) {
                 logger_1.default.error("mongodb connection error", err);
             }
