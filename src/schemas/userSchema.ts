@@ -11,7 +11,7 @@ const schema = new Schema({
     isActive: { type: Boolean, default: true },
     created_date: { type: Date, default: Date.now },
     role: { type: String, required: true, enum: ['USER', 'TENANT'] },
-    favouriteApartments: [{ type: Schema.Types.ObjectId, ref: 'Apartment', unique: true }],
+    favouriteApartments: [{ type: Schema.Types.ObjectId, ref: 'Apartment' }],
 
 });
 
